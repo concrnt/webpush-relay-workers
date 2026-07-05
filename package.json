@@ -1,0 +1,21 @@
+{
+  "name": "webpush-relay-workers",
+  "version": "0.1.0",
+  "private": true,
+  "description": "Cloudflare Workers port of webpush-relay (stateless APNs/FCM relay for still-encrypted WebPush bodies)",
+  "type": "module",
+  "scripts": {
+    "dev": "wrangler dev",
+    "deploy": "wrangler deploy",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "typecheck": "tsc --noEmit",
+    "cf-typegen": "wrangler types"
+  },
+  "devDependencies": {
+    "@cloudflare/vitest-pool-workers": "^0.18.0",
+    "typescript": "^5.8.3",
+    "vitest": "^4.1.0",
+    "wrangler": "^4.107.0"
+  }
+}

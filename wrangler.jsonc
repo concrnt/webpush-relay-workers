@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "webpush-relay",
+  "main": "src/index.ts",
+  "compatibility_date": "2026-07-01",
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "LOG_LEVEL": "info",
+    "FCM_DRY_RUN": "false"
+  }
+}

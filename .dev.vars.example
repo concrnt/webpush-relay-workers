@@ -1,0 +1,15 @@
+# Copy to .dev.vars (gitignored) and fill in real values for local development.
+# In production these are set via `wrangler secret put <NAME>`.
+
+# --- APNs (all four required to enable /apns/* routes) ---
+APNS_KEY="-----BEGIN PRIVATE KEY-----\nMII...\n-----END PRIVATE KEY-----"
+APNS_KEY_ID="ABCDE12345"
+APNS_TEAM_ID="ABCDE12345"
+APNS_TOPIC="world.concrnt.app"
+
+# --- FCM (required to enable /fcm/* routes) ---
+# The full Firebase service-account JSON, as a single-line string.
+FCM_SERVICE_ACCOUNT={"type":"service_account","project_id":"...","private_key":"-----BEGIN PRIVATE KEY-----\n...","client_email":"..."}
+FCM_DRY_RUN="false"
+
+LOG_LEVEL="debug"
