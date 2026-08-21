@@ -41,6 +41,13 @@ describe("buildNotification", () => {
     expect(decoded.p).not.toContain("=");
   });
 
+  it("maps Topic: counter-reset to a badge-only payload that never invokes the NSE", () => {
+    const n = buildNotification("world.concrnt.app", "deadbeef", { ...msg(), topic: "counter-reset" });
+    const decoded = JSON.parse(new TextDecoder().decode(n.payload));
+    expect(decoded).toEqual({ aps: { badge: 0 } });
+    expect(n.collapseId).toBe("counter-reset");
+  });
+
   it.each([
     ["very-low", 5],
     ["low", 5],

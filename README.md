@@ -19,6 +19,22 @@ Identical contract to the Go relay:
 - `POST /fcm/:registration_token`
 - `GET /health`
 
+### Headers
+
+Standard RFC 8030 headers are honoured: `Content-Encoding: aes128gcm`
+(required), `TTL`, `Urgency` (maps to APNs priority / FCM priority) and
+`Topic` (maps to `apns-collapse-id` / FCM `collapse_key`).
+
+One Topic value is special: **`Topic: counter-reset`**. concrnt sends it when
+the owner has looked at their notifications on another device
+(`DELETE /api/v2/subscribe/:owner/:vendor_id/counter`). Because the body is
+encrypted the relay cannot inspect it, so this header is the signal; for APNs
+the relay emits a badge-only notification `{"aps":{"badge":0}}` (no alert, no
+`mutable-content`) that clears the icon badge without invoking the
+Notification Service Extension or showing anything. FCM delivery is
+unchanged (data-only); the Android client reads `type: "counter-reset"` from
+the decrypted payload and cancels its posted notifications.
+
 ## Setup
 
 ```sh

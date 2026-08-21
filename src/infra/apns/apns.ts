@@ -45,6 +45,19 @@ function fallbackPayload(): unknown {
   return { aps: { alert: { title: FALLBACK_TITLE }, "mutable-content": 1 } };
 }
 
+/**
+ * RFC 8030 Topic value concrnt sends when the owner has looked at their
+ * notifications elsewhere (GET/DELETE /subscribe/.../counter). The encrypted
+ * body can't be inspected here, so this plaintext header is the only signal.
+ * Mapped to a badge-only APNs notification: no alert, no mutable-content, so
+ * iOS updates the icon badge without invoking the NSE or showing anything.
+ */
+export const COUNTER_RESET_TOPIC = "counter-reset";
+
+function counterResetPayload(): unknown {
+  return { aps: { badge: 0 } };
+}
+
 function priorityFor(urgency: Message["urgency"]): number {
   return urgency === "very-low" || urgency === "low" ? PRIORITY_LOW : PRIORITY_HIGH;
 }
@@ -102,7 +115,9 @@ export function buildNotification(
   msg: Message,
 ): ApnsNotification {
   const bodyB64 = base64UrlEncode(msg.body);
-  let raw = new TextEncoder().encode(JSON.stringify(buildPayload(bodyB64)));
+  let raw = new TextEncoder().encode(
+    JSON.stringify(msg.topic === COUNTER_RESET_TOPIC ? counterResetPayload() : buildPayload(bodyB64)),
+  );
   if (raw.byteLength > MAX_PAYLOAD_BYTES) {
     raw = new TextEncoder().encode(JSON.stringify(fallbackPayload()));
     if (raw.byteLength > MAX_PAYLOAD_BYTES) {
